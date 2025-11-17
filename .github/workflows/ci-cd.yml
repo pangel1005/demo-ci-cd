@@ -1,0 +1,57 @@
+name: Pipeline CI/CD Demo
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  ci-build-test:
+    name: CI - Build y Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Ejecutar pruebas
+        run: npm test
+
+  cd-deploy:
+    name: CD - Despliegue simulado
+    needs: ci-build-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Simular despliegue
+        run: |
+          echo "Simulando despliegue de la app..."
+          mkdir -p deploy
+          cp index.js deploy/
+
+      - name: Publicar artefacto desplegado
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-desplegada
+          path: deploy
