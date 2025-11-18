@@ -1,1 +1,1 @@
-console.log("Hola desde el pipeline CI/CD 🚀");
+console.log("¡Nuevo mensaje desde el pipeline CI/CD! 🚀");
